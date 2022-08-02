@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 
 import { AuthDto } from './dto';
 import { JwtPayload } from './interfaces';
+import { TOKEN_TYPE, RESET_TOKEN_EXPIRES } from '../common/configs/constants';
 
 @Injectable()
 export class AuthService {
@@ -49,6 +50,21 @@ export class AuthService {
       },
     );
     return accessToken;
+  }
+
+  async getResetToken(userId: number, email: string) {
+    const resetToken = await this.jwtService.signAsync(
+      {
+        sub: userId,
+        email,
+        type: TOKEN_TYPE.resetPassword,
+      },
+      {
+        secret: process.env.JWT_SECRET,
+        expiresIn: RESET_TOKEN_EXPIRES,
+      },
+    );
+    return resetToken;
   }
 
   async updateToken(token: string, userId: number) {

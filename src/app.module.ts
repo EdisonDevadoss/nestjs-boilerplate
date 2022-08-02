@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+import { PasswordModule } from './password/password.module';
 
 const ENV = process.env.NODE_ENV || 'development';
 
@@ -16,6 +17,7 @@ const ENV = process.env.NODE_ENV || 'development';
     }),
     PrismaModule,
     AuthModule,
+    PasswordModule,
   ],
   controllers: [AppController],
   providers: [AppService],
