@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -19,13 +19,17 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new ForbiddenException('Access Denied');
+      throw new UnauthorizedException(
+        'You need to sign-in to access this page',
+      );
     }
 
     const passwordMatched = await bcrypt.compare(dto.password, user.hash);
 
     if (!passwordMatched) {
-      throw new ForbiddenException('Access Denied');
+      throw new UnauthorizedException(
+        'You need to sign-in to access this page',
+      );
     }
     const userId = Number(user.id);
     const token = await this.getToken(userId, user.email);

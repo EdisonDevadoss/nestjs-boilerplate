@@ -18,7 +18,6 @@ export class TokenInterceptor implements NestInterceptor {
   ): Observable<any> | Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest<Request>();
     const authToken = request.headers['authorization'];
-    console.log('header is', authToken);
     const response = context.switchToHttp().getResponse<Response>();
 
     response.setHeader('Authorization', authToken);

@@ -1,5 +1,13 @@
-import { Body, Controller, Delete, Post, Response } from '@nestjs/common';
-import { Response as Res } from 'express';
+import {
+  Body,
+  Controller,
+  Delete,
+  Header,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
+import { Response } from 'express';
 
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
@@ -12,21 +20,16 @@ export class AuthController {
 
   @Public()
   @Post('signin')
-  signin(@Body() dto: AuthDto, @Response() reply: Res) {
-    return this.authService
-      .signin(dto)
-      .then((user) => {
-        return reply
-          .set({ Authorization: `Bearer ${user.token}` })
-          .json({ ...user });
-      })
-      .catch((error) => {
-        return reply.json(error);
-      });
+  @Header('Authorization', 'none')
+  signin(@Body() dto: AuthDto, @Res() reply: Response) {
+    return this.authService.signin(dto).then((user) => {
+      reply.header('Authorization', `Bearer ${user.token}`);
+      reply.status(HttpStatus.ACCEPTED).send(user);
+    });
   }
 
   @Delete('logout')
-  logout(@GetCurrentUser() user: JwtPayload, @Response() reply: Res) {
+  logout(@GetCurrentUser() user: JwtPayload, @Res() reply: Response) {
     this.authService
       .logout(user)
       .then(() => {
