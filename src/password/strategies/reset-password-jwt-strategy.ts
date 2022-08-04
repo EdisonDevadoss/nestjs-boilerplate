@@ -1,7 +1,7 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { RESET_TOKEN_EXPIRES } from '../../common/configs/constants';
+import { TOKEN_TYPE } from '../../common/configs/constants';
 
 @Injectable()
 export class ResetPasswordJwtStrategy extends PassportStrategy(
@@ -18,8 +18,7 @@ export class ResetPasswordJwtStrategy extends PassportStrategy(
 
   // ToDo Valid type
   async validate(payload: any) {
-    console.log('payload is', payload);
-    if (payload.type !== RESET_TOKEN_EXPIRES) {
+    if (payload.type !== TOKEN_TYPE.resetPassword) {
       throw new UnauthorizedException();
     }
     return payload;

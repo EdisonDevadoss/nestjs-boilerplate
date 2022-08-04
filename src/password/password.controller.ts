@@ -35,7 +35,6 @@ export class PasswordController {
   @Post('reset')
   @UseGuards(ResetPasswordGuard)
   resetPasword(@GetCurrentUser() user: any, @Body() dto: PasswordResetDto) {
-    console.log('token', user);
-    console.log('dto', dto);
+    return this.passwordService.resetPassword(user.sub, dto);
   }
 }
